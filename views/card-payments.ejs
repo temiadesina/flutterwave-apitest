@@ -25,6 +25,13 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
 				<h3>Card Pay</h3>
+        <%if(typeof error != 'undefined' && error) {%>
+          <div class="alert alert-danger">Error occuried during card payment</div>
+        <%}
+        else if(typeof message != 'undefined') {%>
+          <div class="alert alert-success">Card payment request was successfull</div>
+          <pre>Response from Flutterwave <%= JSON.stringify(message) %></pre>
+        <%}%>
         <form role="form" name="payviacard" id="card-pay" action="/card-payment" method="post">
           <div class="row control-group">
             <div class="form-group col-xs-6">
