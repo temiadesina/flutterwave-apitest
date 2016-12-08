@@ -1,0 +1,60 @@
+<!DOCTYPE>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- font links here -->
+
+
+    <!-- css links here -->
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+<section>
+<div class="container">
+  <div class="row">
+    <h3>OTP Validation</h3>
+    <%if(typeof status != 'success') {%>
+      <div class="alert alert-danger">Error occured</div>
+      <pre>Response from flutterwave <%= JSON.stringify(message) %></pre>
+    <%}
+    else if(typeof status == 'success') {%>
+      <div class="alert alert-success">BVN validation <%= JSON.stringify(respmsg)%></div>
+      <pre>Response from Flutterwave <%= JSON.stringify(message) %></pre>
+    <%}%>
+    <form class="row" action="" method="post" role="form" id="bvnotp">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>Send OTP</label>
+          <input type="text" name="bvnotp" class="form-control" placeholder="Enter otp code" required="please enter otp sent to registered phone number">
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="form-group">
+          <button type="submit" name="otpbutton" class="btn btn-primary" id="otpbutton">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</section>
+
+
+
+</body>
+
+
+
+</html>

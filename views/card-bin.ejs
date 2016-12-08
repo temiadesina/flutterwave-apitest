@@ -24,6 +24,14 @@
   <div class="container">
     <div class="row">
       <h3>Card BIN Verification</h3>
+			<%if(typeof status != 'success') {%>
+	      <div class="alert alert-danger">Error occured</div>
+	      <pre>Response from flutterwave <%= JSON.stringify(message) %></pre>
+	    <%}
+	    else if(typeof status == 'success') {%>
+	      <div class="alert alert-success">BVN validation <%= JSON.stringify(respmsg)%></div>
+	      <pre>Response from Flutterwave <%= JSON.stringify(message) %></pre>
+	    <%}%>
       <form class="row" action="#" method="post" role="form" id="cardbinform">
         <div class="form-group col-sm-12">
           <label>First 6 Digits</label>

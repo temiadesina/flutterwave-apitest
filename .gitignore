@@ -1,3 +1,6 @@
 .idea
 /home/temiadesina/git/flutterwave-api-project/flutterwave-apitest/nodemodules
 node_modules
+
+.env
+
