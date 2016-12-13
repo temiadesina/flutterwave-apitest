@@ -1,5 +1,6 @@
 var CryptoJS = require('crypto-js');
 var utf8     = require('utf8');
+var forge    = require('node-forge');
 
 /**
  * TripleDES encryption
@@ -10,10 +11,7 @@ var utf8     = require('utf8');
  */
 function encrypt(key, text)
 {
-    var CryptoJS = require('crypto-js');
-    var forge    = require('node-forge');
-    var utf8     = require('utf8');
-    text = (text)? text.toString():'';
+    text         =   (text)? text.toString():'';
     key          = CryptoJS.MD5(utf8.encode(key)).toString(CryptoJS.enc.Latin1);
     key          = key + key.substring(0, 8);
     var cipher   = forge.cipher.createCipher('3DES-ECB', forge.util.createBuffer(key));

@@ -20,34 +20,24 @@
 </head>
 
 <body>
-<section>
-<div class="container">
-  <div class="row">
-    <h3>OTP Validation</h3>
-
-    <form class="row" action="#" method="post" role="form" id="bvnotp">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label>Send OTP</label>
-          <input type="text" name="bvnotp" class="form-control" placeholder="Enter otp code" required="please enter otp sent to registered phone number">
-        </div>
+  <section>
+    <div class="container">
+      <div class="row">
+        <form class="row"  method="post" role="form" id="card-otp">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Enter otp</label>
+              <input type="text" name="cardotp" class="form-control" placeholder="Please Enter given OTP" required="Fill in otp">
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <button type="submit" name="button" class="btn btn-primary" id="button">Submit</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="col-sm-8">
-        <div class="form-group">
-          <button type="submit" name="otpbutton" class="btn btn-primary" id="otpbutton">Submit</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
 
-
-</section>
-
-
-
+    </div>
+  </section>
 </body>
-
-
-
-</html>

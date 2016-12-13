@@ -1,12 +1,12 @@
 var encrypt = require('./encrypt');
 var unirest = require('unirest');
 var dotenv = require('dotenv');
-var ApiKey = process.env.API_KEY;
-var merchantid = process.env.MERCHANT_ID;
-var baseurl = process.env.API_URL;
+// var ApiKey = process.env.API_KEY;
+// var merchantid = process.env.MERCHANT_ID;
+// var baseurl = process.env.API_URL;
 
 
-dotenv.load({path: '.env'});
+// dotenv.load({path: '.env'});
 
 exports.checkcard = function (req, res, next) {
   console.log(req.body.cardbin);

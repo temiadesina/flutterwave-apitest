@@ -1,13 +1,23 @@
+var express = require('express');
 var encrypt = require('./encrypt');
 var unirest = require('unirest');
-var dotenv = require('dotenv');
-var ApiKey = process.env.API_KEY;
-var merchantid = process.env.MERCHANT_ID;
-var baseurl = process.env.API_URL;
+var config = require('../env.json');
+var session = require('express-session');
+ var ApiKey = config.API_KEY;
+ var merchantid = config.MERCHANT_ID;
+var baseurl = config.API_URL;
 
-var storedbvn, storedtransref;
+var app = express();
+//var storedbvn, storedtransref = '';
 
-dotenv.load({path: '.env'});
+app.use(session({
+  secret: "nhfritjsl",
+  resave: false,
+  saveUninitialized: true,
+  cookies: {maxAge: 180 * 60 * 1000},
+}));
+
+// dotenv.load({path: '.env'});
 
 exports.validatebvn = function(req, res, next){
 // body.merchantid = process.env.MERCHANT_ID;
@@ -16,8 +26,12 @@ exports.validatebvn = function(req, res, next){
     "bvn": encrypt(ApiKey, req.body.bvn),
     "otpoption": encrypt(ApiKey, req.body.vmethod)
   };
-  storedbvn = req.body.bvn;
-  console.log(storedbvn);
+
+  //var storedbvn = req.body.bvn;
+  //req.session.storedbvn = storedbvn;
+  const sess = req.session;
+  console.log('session is', typeof req.session);
+  //console.log(storedbvn);
   //var encryptedDetails = encryptCardDetails(bvnDetails);
   //console.log(encryptedDetails);
   unirest.post(baseurl + 'bvn/verify/')
@@ -27,30 +41,42 @@ exports.validatebvn = function(req, res, next){
   })
   .send(bvnDetails)
   .end(function(response){
-    if (response.responseCode == 00 && response.status == 'success') {
+    if (response.body.data.responseCode == '00' && response.body.data.status == 'success') {
       //everything is fine and OTP was sent to phone
-      res.render('bvn-otpvalidation', {error: false, message: response.body, status: response.body.status, respmsg: response.body.responseMessage});
+      res.render('bvn-otpvalidation')
+
+      //req.session.storedtransref = response.data.transactionReference
+
     }
     else {
-      res.render('bvn-otpvalidation', {error: true, message: response.body, status: response.body.status, respmsg: response.body.responseMessage});
+      res.render('bvn-otpvalidation');
       console.log(response.body);
+      console.log(response.body.data.transactionReference);
     }
-    storedtransref = response.transactionReference;
-    console.log(storedtransref);
+    //storedbvn = req.session.storedbvn;
+    //req.session.storedbvn = req.body.bvn;
+    //storedbvn = req.session.storedbvn;
+    //storedtransref = req.session.storedtransref;
+    //req.session.storedtransref = response.body.data.transactionReference;
+  // console.log(storedtransref);
   })
 
 
    //function(error, response, body){
 
   //.json(encryptedDetails);
+  //req.session.storedbvn = req.body.bvn;
 
 };
 
+
 exports.bvnotp = function (req, res, next) {
+  //console.log(req.session.storedbvn + '64');
+  //console.log(req.session.storedtransref + '65');
   var otpdetails = {
     'merchantid': merchantid,
-    'bvn': encrypt(ApiKey, storedbvn),
-    'transactionReference': encrypt(ApiKey, storedtransref),
+    'bvn':  encrypt(ApiKey, req.session.stbvn),
+    //'transactionReference': encrypt(ApiKey, req.session.storedtransref),
     'otp': encrypt(ApiKey, req.body.bvnotp)
   };
 console.log(otpdetails);
@@ -61,7 +87,7 @@ console.log(otpdetails);
   })
   .send(otpdetails)
   .end(function(response){
-    if (response.responseCode == 00 && response.status == 'success') {
+    if (response.body.data.responseCode == '00' && response.body.data.status == 'success') {
       //everything is fine and OTP was sent to phone
       res.render('bvn-success', {error: false, message: response.body, status: response.status, respmsg: response.responseMessage});
     }

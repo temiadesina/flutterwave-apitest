@@ -12,6 +12,10 @@ router.post('/card-payment', function(req, res, next){
     card_payments.charge(req, res, next);
 });
 
+router.post('/card-validate', function(req, res, next){
+  card_payments.cardotp(req, res, next);
+})
+
 router.get('/bvn-verify', function(req, res){
     res.render('bvn-verification');
 });
@@ -30,6 +34,14 @@ router.get('/card-bin', function(req, res){
 
 router.post('/card-bin', function(req, res, next){
   cardbin_verify.checkcard(req, res, next);
+});
+
+router.get('/link-account', function(req, res, next){
+  res.render('pay-view');
+});
+
+router.get('/pay-validate1', function(req, res, next){
+  res.render('pay-validate1');
 });
 
 module.exports = router;
