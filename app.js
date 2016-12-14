@@ -1,11 +1,22 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({
+  secret: "nhfritjsl",
+  resave: false,
+  saveUninitialized: false,
+  cookies: {maxAge: 180 * 60 * 1000},
+}));
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

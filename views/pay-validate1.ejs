@@ -24,13 +24,23 @@
   <section>
     <div class="container">
       <div class="row">
-        <form class="row" action="#" method="post" role="form" id="linkvalidate1">
+				<% if (rscode != '02' || rscode != '00') {%>
+					<div class="alert alert-danger">Flutterwave could not generate otp: <%= message %></div>
+				<%} else{%>
+					<div class="alert alert-success"><%= message %></div>
+				<%}%>
+        <form class="row" action="/pay-validate1" method="post" role="form" id="linkvalidate1">
           <div class="col-sm-12">
-            <div class="form-group completion">
+            <div class="form-group">
               <label>OTP</label>
               <input type="text" name="payotp1" class="form-control" placeholder="Enter Otp" required="">
             </div>
           </div>
+					<div class="col-sm-8">
+						<div class="form-group">
+							<button type="submit" name="button" class="btn btn-primary">Submit</button>
+						</div>
+					</div>
         </form>
       </div>
     </div>

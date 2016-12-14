@@ -24,7 +24,14 @@
 <section>
   <div class="container">
     <div class="row">
-        <div class="alert alert-success">BVN Registered <%= JSON.stringify(respmsg)%></div>
+			<% if ( rscode == '00') {%>
+        <div class="alert alert-success">Bvn verification was successful</div>
+				<pre>Response from flutterwave: <%= message %></pre>
+			<%}
+			else {%>
+				<div class="alert alert-danger">Bvn verification was unsuccessful</div>
+				<pre>Response from flutterwave: <%= message %></pre>
+			<%}%>
       </div>
     </div>
   </div>

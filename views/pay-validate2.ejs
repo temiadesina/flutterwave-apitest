@@ -1,0 +1,28 @@
+
+<body>
+  <section>
+      <div class="container">
+        <div class="row">
+          <h3>OTP validation 2</h3>
+          <% if (rscode != '00') {%>
+  					<div class="alert alert-danger">Flutterwave could not generate otp: <%= message %></div>
+  				<%} else{%>
+  					<div class="alert alert-success"><%= message %></div>
+  				<%}%>
+          <form class="row" action="/pay-validate2" method="post" role="form">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label>Enter Otp</label>
+                <input type="text" name="payotp2" class="form-control" placeholder="Enter otp" required>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group">
+                <button type="submit" name="button" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  </section>
+</body>

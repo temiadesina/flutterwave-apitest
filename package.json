@@ -24,6 +24,7 @@
     "utf8": "^2.1.2"
   },
   "devDependencies": {
+    "eslint": "^3.12.1",
     "nodemon": "^1.11.0"
   }
 }

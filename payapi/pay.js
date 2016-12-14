@@ -1,5 +1,4 @@
-var express = require('express');
-var encrypt = require('./encrypt');
+var encrypt = require('../flutterwave-service/encrypt');
 var unirest = require('unirest');
 var config = require('../env.json');
 var session = require('express-session');
@@ -7,15 +6,8 @@ var ApiKey = config.API_KEY;
 var merchantid = config.MERCHANT_ID;
 var baseurl = config.API_URL;
 
-var app = express();
 
-app.use(session({
-  secret: '234hfgrtei987js',
-  resave: false,
-  saveUninitialized: false,
-  cookies: {maxAge: 180 * 60 * 1000}
-}));
-
+var sess = null;
 exports.linkAccount = function(req, res, next){
 
   var accDetails = {
@@ -24,40 +16,38 @@ exports.linkAccount = function(req, res, next){
     "country": encrypt(ApiKey, req.body.acccountry)
   }
 
-  var sess = req.session;
-  unirest.post(baseurl + 'pay/linkaccount')
+  sess = req.session;
+  unirest.post(baseurl + 'pay/linkaccount/')
   .headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   })
   .send(accDetails)
   .end(function(response){
-    if (response.body.data.responsecode == '02' && response.body.data.status == 'success') {
-      var Response = "Validate with otp sent to you";
-      res.render('pay-validate1', function(){
-        var completion = document.querySelector('.completion');
-        completion.innerHTML = "Pending Validation";
-      });
-    } else {
-      var Response = response.body.data.responsemessage;
-      res.render('pay-view', function(){
-        var error = document.querySelector('.error');
-        error.innerHTML = 'An Error occured: ' + Response;
-      });
-    }
+    var Response = response.body;
+    console.log(response);
+    if (Response.data.responsecode == '02' && Response.data.status == 'success') {
+      var responsemsg = "Validate with otp sent to you";
+      res.render('pay-validate1.ejs', {message: responsemsg, rscode: Response.data.responsecode});
+      console.log(response.body.data);
+    }else if (response.body.data.responsecode != '02' || response.body.data.responsecode != '00') {
+      res.render('pay-view.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
+    }//else {
+      //res.render('pay-view.ejs', {message: Response.data.responsemessage, r})
+    //}
 
-    sess = response.body.data.uniquereference;
+    sess.relatedreference = Response.data.uniquereference;
   })
 };
 
 
-exports.accountOtp = function (req, res, next) {
+exports.accountOtp1 = function (req, res, next) {
     var accotpDetails = {
       "merchantid": merchantid,
       "otp": encrypt(ApiKey, req.body.payotp1),
       "otptype": encrypt(ApiKey, 'PHONE_OTP'),
       "currency": encrypt(ApiKey, 'NG'),
-      "relatedreference": encrypt(ApiKey, sess)
+      "relatedreference": encrypt(ApiKey, sess.relatedreference)
     }
 
     unirest.post(baseurl + 'pay/linkaccount/validate')
@@ -67,10 +57,37 @@ exports.accountOtp = function (req, res, next) {
     })
     .send(accotpDetails)
     .end(function(response){
-      if (response.body.data.responsecode == '02' && response.body.data.status == 'success') {
-
-      } else {
-
+      var Response = response.body;
+      if (Response.data.responsecode == '02' && Response.data.status == 'success') {
+        res.render('pay-validate2.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
+      } else if (Response.data.responsecode != '02') {
+        res.render('pay-validate1.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
       }
+      sess.relatedreference = Response.data.uniquereference;
     })
+};
+
+exports.accountOtp2 = function (req, res, next) {
+  var otpDetails2 = {
+    "merchantid": merchantid,
+    "otp": encrypt(ApiKey, req.body.payotp2),
+    "relatedreference": encrypt(ApiKey, sess.relatedreference),
+    "otptype": encrypt(ApiKey, "PHONE_OTP")
+  }
+
+  unirest.post(baseurl + 'pay/linkaccount/validate')
+  .headers({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  })
+  .send(otpDetails2)
+  .end(function(response){
+    var Response = response.body;
+    if (Response.data.responsecode == '00' && Response.data.status == 'success') {
+      res.render('pay-validate2.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
+
+    } else if (Response.data.responsecode != '00') {
+      res.render('pay-validate2.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
+    }
+  })
 }
