@@ -49,9 +49,9 @@ router.get('/pay-view', function(req, res, next){
 
 router.post('/pay-view', pay_api.linkAccount);
 
-router.get('/pay-validate1', function(req, res, next){
-  res.render('pay-validate1');
-});
+// router.get('/pay-validate1', function(req, res, next){
+//   res.render('pay-validate1');
+// });
 
 router.post('/pay-validate1', pay_api.accountOtp1);
 

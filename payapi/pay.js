@@ -17,7 +17,7 @@ exports.linkAccount = function(req, res, next){
   }
 
   sess = req.session;
-  unirest.post(baseurl + 'pay/linkaccount/')
+  unirest.post(baseurl + 'pay/linkaccount')
   .headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json'
@@ -25,11 +25,11 @@ exports.linkAccount = function(req, res, next){
   .send(accDetails)
   .end(function(response){
     var Response = response.body;
-    console.log(response);
-    if (Response.data.responsecode == '02' && Response.data.status == 'success') {
+    console.log(Response.data.responsecode);
+    if (Response.data && Response.data.responsecode == '02' && Response.data.status == 'success') {
       var responsemsg = "Validate with otp sent to you";
       res.render('pay-validate1.ejs', {message: responsemsg, rscode: Response.data.responsecode});
-      console.log(response.body.data);
+    //  console.log(response.body.responsecode);
     }else if (response.body.data.responsecode != '02' || response.body.data.responsecode != '00') {
       res.render('pay-view.ejs', {message: Response.data.responsemessage, rscode: Response.data.responsecode});
     }//else {
